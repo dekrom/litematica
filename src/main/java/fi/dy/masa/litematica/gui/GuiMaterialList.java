@@ -302,8 +302,26 @@ public class GuiMaterialList extends GuiListBase<MaterialListEntry, WidgetMateri
                 case WRITE_TO_FILE:
                     Path dir = FileUtils.getConfigDirectoryAsPath().resolve(Reference.MOD_ID);
                     boolean csv = GuiBase.isShiftDown();
-                    String ext = csv ? ".csv" : ".txt";
-                    Path file = DataDump.dumpDataToFile(dir, "material_list", ext, this.getMaterialListDump(materialList, csv).getLines());
+                    boolean jsonExport = GuiBase.isAltDown();
+                    Path file;
+
+                    if (jsonExport)
+                    {
+                        MaterialListJsonExporter exporter = new MaterialListJsonExporter(materialList);
+                        String fileName = "material_list_" + TimeFormat.REGULAR.formatNow() + ".json";
+
+                        file = dir.resolve(fileName);
+
+                        if (!exporter.writeCacheToFile(file, TimeFormat.RFC1123, MinecraftClient.getInstance()))
+                        {
+                            file = null;
+                        }
+                    }
+                    else
+                    {
+                        String ext = csv ? ".csv" : ".txt";
+                        file = DataDump.dumpDataToFile(dir, "material_list", ext, this.getMaterialListDump(materialList, csv).getLines());
+                    }
 
                     if (file != null)
                     {
