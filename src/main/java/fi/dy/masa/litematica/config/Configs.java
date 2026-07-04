@@ -4,12 +4,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+
+import net.minecraft.client.Minecraft;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import net.minecraft.client.Minecraft;
-
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.HudAlignment;
 import fi.dy.masa.malilib.config.IConfigBase;
@@ -18,9 +17,9 @@ import fi.dy.masa.malilib.config.options.*;
 import fi.dy.masa.malilib.hotkeys.IHotkey;
 import fi.dy.masa.malilib.registry.Registry;
 import fi.dy.masa.malilib.util.FileUtils;
-import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.malilib.util.MathUtils;
 import fi.dy.masa.malilib.util.MessageOutputType;
+import fi.dy.masa.malilib.util.data.json.JsonUtils;
 import fi.dy.masa.malilib.util.i18n.i18nConfig;
 import fi.dy.masa.malilib.util.i18n.i18nManager;
 import fi.dy.masa.malilib.util.i18n.i18nMode;
@@ -465,11 +464,11 @@ public class Configs implements IConfigHandler
 
     public static void loadFromFile()
     {
-        Path configFile = FileUtils.getConfigDirectoryAsPath().resolve(CONFIG_FILE_NAME);
+        Path configFile = FileUtils.getConfigDirectory().resolve(CONFIG_FILE_NAME);
 
         if (Files.exists(configFile) && Files.isReadable(configFile))
         {
-            JsonElement element = JsonUtils.parseJsonFileAsPath(configFile);
+            JsonElement element = JsonUtils.parseJsonFile(configFile);
 
             if (element != null && element.isJsonObject())
             {
@@ -481,7 +480,7 @@ public class Configs implements IConfigHandler
                 ConfigUtils.readConfigBase(root, "InfoOverlays", InfoOverlays.OPTIONS);
                 ConfigUtils.readConfigBase(root, "Visuals", Visuals.OPTIONS);
 
-                //Litematica.debugLog("loadFromFile(): Successfully loaded config file '{}'.", configFile.toAbsolutePath());
+                Litematica.debugLog("loadFromFile(): Successfully loaded config file '{}'.", configFile.toAbsolutePath());
             }
             else
             {
@@ -496,6 +495,7 @@ public class Configs implements IConfigHandler
             DataManager.setToolItem(Generic.TOOL_ITEM.getStringValue());
             DataManager.getInstance().setToolItemComponents(Generic.TOOL_ITEM_COMPONENTS.getStringValue(), Minecraft.getInstance().level.registryAccess());
         }
+
         InventoryUtils.setPickBlockableSlots(Generic.PICK_BLOCKABLE_SLOTS.getStringValue());
         DataManager.getSelectionManager().checkSelectionModeConfig();
 	    LitematicaDebugHud.INSTANCE.checkConfig();
@@ -503,12 +503,12 @@ public class Configs implements IConfigHandler
 
     public static void saveToFile()
     {
-        Path dir = FileUtils.getConfigDirectoryAsPath();
+        Path dir = FileUtils.getConfigDirectory();
 
         if (!Files.exists(dir))
         {
             FileUtils.createDirectoriesIfMissing(dir);
-            //Litematica.debugLog("saveToFile(): Creating directory '{}'.", dir.toAbsolutePath());
+            Litematica.debugLog("saveToFile(): Creating directory '{}'.", dir.toAbsolutePath());
         }
 
         if (Files.isDirectory(dir))
@@ -521,7 +521,7 @@ public class Configs implements IConfigHandler
             ConfigUtils.writeConfigBase(root, "InfoOverlays", InfoOverlays.OPTIONS);
             ConfigUtils.writeConfigBase(root, "Visuals", Visuals.OPTIONS);
 
-            JsonUtils.writeJsonToFileAsPath(root, dir.resolve(CONFIG_FILE_NAME));
+            JsonUtils.writeJsonToFile(root, dir.resolve(CONFIG_FILE_NAME));
         }
         else
         {
