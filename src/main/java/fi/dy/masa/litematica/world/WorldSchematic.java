@@ -53,6 +53,7 @@ import net.minecraft.world.tick.TickManager;
 
 import fi.dy.masa.malilib.util.WorldUtils;
 import fi.dy.masa.litematica.Reference;
+import fi.dy.masa.litematica.config.Configs;
 import fi.dy.masa.litematica.render.schematic.WorldRendererSchematic;
 
 public class WorldSchematic extends World
@@ -222,6 +223,19 @@ public class WorldSchematic extends World
 
         if (!this.chunkManagerSchematic.isChunkLoaded(chunkX, chunkZ))
             return false;
+
+        if (Configs.Generic.DEDUPLICATE_SCHEMATIC_ENTITIES.getBooleanValue())
+        {
+            Entity existing = this.getEntityLookup().get(entity.getUuid());
+
+            // A matching entity (same UUID) is already present; skip the duplicate
+            // so the original entity keeps its exact UUID/EntityID.
+            if (existing != null)
+            {
+                return false;
+            }
+        }
+
         entity.setId(this.nextEntityId++);
         ChunkSchematic chunk = this.chunkManagerSchematic.getChunk(chunkX, chunkZ);
         if(chunk == null)

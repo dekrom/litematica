@@ -60,6 +60,7 @@ public class Configs implements IConfigHandler
         public static final ConfigBoolean       COMMAND_USE_WORLDEDIT       = new ConfigBoolean("commandUseWorldEdit", false).apply(GENERIC_KEY);
 //        public static final ConfigBoolean       COMMAND_USE_STRICT          = new ConfigBoolean("commandUseStrict", true).apply(GENERIC_KEY);
         public static final ConfigBoolean       DEBUG_LOGGING               = new ConfigBoolean("debugLogging", false).apply(GENERIC_KEY);
+        public static final ConfigBoolean       DEDUPLICATE_SCHEMATIC_ENTITIES= new ConfigBoolean("deduplicateSchematicEntities", false).apply(GENERIC_KEY);
         public static final ConfigOptionList    DATAFIXER_MODE              = new ConfigOptionList("datafixerMode", DataFixerMode.ALWAYS).apply(GENERIC_KEY);
         public static final ConfigInteger       DATAFIXER_DEFAULT_SCHEMA    = new ConfigInteger("datafixerDefaultSchema", 1139, 99, 2724, true).apply(GENERIC_KEY);
         public static final ConfigBoolean       DISPLAY_FILE_OPS_FEEDBACK   = new ConfigBoolean("displayFileOpsFeedback", false).apply(GENERIC_KEY);
@@ -107,6 +108,7 @@ public class Configs implements IConfigHandler
         public static final ConfigString        PICK_BLOCKABLE_SLOTS        = new ConfigString( "pickBlockableSlots", "1,2,3,4,5").apply(GENERIC_KEY);
         public static final ConfigBoolean       PLACEMENT_RESTRICTION       = new ConfigBoolean("placementRestriction", false).apply(GENERIC_KEY);
         public static final ConfigBoolean       RENDER_MATERIALS_IN_GUI     = new ConfigBoolean("renderMaterialListInGuis", true).apply(GENERIC_KEY);
+        public static final ConfigBoolean       REVERSE_OP_MODE_DIRECTION   = new ConfigBoolean("reverseOperationModeDirection", false).apply(GENERIC_KEY);
         public static final ConfigBoolean       RENDER_THREAD_NO_TIMEOUT    = new ConfigBoolean("renderThreadNoTimeout", true).apply(GENERIC_KEY);
         public static final ConfigInteger       SERVER_NBT_REQUEST_RATE     = new ConfigInteger("serverNbtRequestRate", 2).apply(GENERIC_KEY);
         public static final ConfigBoolean       SIGN_TEXT_PASTE             = new ConfigBoolean("signTextPaste", true).apply(GENERIC_KEY);
@@ -126,6 +128,7 @@ public class Configs implements IConfigHandler
 //                COMMAND_USE_STRICT,
                 CUSTOM_SCHEMATIC_BASE_DIRECTORY_ENABLED,
                 DEBUG_LOGGING,
+                DEDUPLICATE_SCHEMATIC_ENTITIES,
                 DISPLAY_FILE_OPS_FEEDBACK,
                 DATAFIXER_MODE,
                 DATAFIXER_DEFAULT_SCHEMA,
@@ -175,6 +178,7 @@ public class Configs implements IConfigHandler
                 PLACEMENT_RESTRICTION,
                 PLACEMENT_RESTRICTION_WARN,
                 RENDER_MATERIALS_IN_GUI,
+                REVERSE_OP_MODE_DIRECTION,
                 RENDER_THREAD_NO_TIMEOUT,
                 SERVER_NBT_REQUEST_RATE,
                 SIGN_TEXT_PASTE,
