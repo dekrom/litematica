@@ -42,13 +42,29 @@ public class SchematicBuffer implements AutoCloseable
     {
         String ext = FileType.getFileExt(this.type);
 
-        if (this.name.contains(ext))
+        // The name is received from an untrusted server over the Servux channel. Strip any
+        // directory components or path traversal so a hostile server cannot write outside the
+        // target directory (e.g. drop a jar into mods/); only a bare file name is ever used.
+        String safe = this.name.replace('\\', '/');
+        int slash = safe.lastIndexOf('/');
+
+        if (slash >= 0)
         {
-            return Path.of(this.name);
+            safe = safe.substring(slash + 1);
+        }
+
+        if (safe.isEmpty() || safe.equals(".") || safe.equals(".."))
+        {
+            safe = "default_file";
+        }
+
+        if (safe.contains(ext))
+        {
+            return Path.of(safe);
         }
         else
         {
-            return Path.of(this.name + ext);
+            return Path.of(safe + ext);
         }
     }
 
@@ -72,7 +88,13 @@ public class SchematicBuffer implements AutoCloseable
             }
         }
 
-        Path file = dir.resolve(this.getFileName());
+        Path file = dir.resolve(this.getFileName()).normalize();
+
+        if (!file.startsWith(dir.normalize()))
+        {
+            Litematica.LOGGER.error("LitematicBuffer#writeFile(): Refusing to write file outside the schematic directory: '{}'", file.toAbsolutePath().toString());
+            return null;
+        }
 
         if (Files.exists(file))
         {
